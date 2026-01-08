@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import pydantic
 from pydantic import BaseModel
@@ -11,8 +11,8 @@ settings = Settings()
 
 
 class Images(BaseModel):
-    data: Optional[List[str] | List[bytes]] = pydantic.Field(default=None, example=None,
-                                                             description='List of base64 encoded images')
+    data: Optional[Union[List[str], List[bytes]]] = pydantic.Field(default=None, example=None,
+                                                                   description='List of base64 encoded images')
     urls: Optional[List[str]] = pydantic.Field(default=None,
                                                example=[example_img],
                                                description='List of images urls')

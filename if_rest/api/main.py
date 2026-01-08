@@ -8,11 +8,16 @@ from aiohttp import ClientTimeout, TCPConnector
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_offline import FastAPIOffline
+from fastapi.staticfiles import StaticFiles
 
 from if_rest.api.routes.v1 import v1_router
 from if_rest.core.processing import get_processing
+from if_rest.core.face_manager import FaceManager
+from if_rest.api.routes.v1.face_management import set_face_manager
 from if_rest.logger import logger
 from if_rest.settings import Settings
+
+import os
 
 __version__ = os.getenv('IFR_VERSION', '0.9.5.0')
 
@@ -50,10 +55,20 @@ async def lifespan(_: FastAPI):
         processing = await get_processing()
         await processing.start(dl_client=dl_client)
         logger.info(f"Processing module ready!")
+
+        # Initialize face manager with GPU support based on environment variable
+        use_gpu = os.getenv('USE_GPU', 'false').lower() == 'true'
+        face_manager = FaceManager(processing=processing, use_gpu=use_gpu)
+        set_face_manager(face_manager)
+        logger.info(f"Face manager ready! GPU support: {use_gpu}")
     except Exception as e:
         logger.error(e)
         exit(1)
     yield
+
+
+from fastapi.responses import HTMLResponse
+from fastapi import Request
 
 
 def get_app() -> FastAPI:
@@ -72,6 +87,15 @@ def get_app() -> FastAPI:
         allow_headers=['*']
     )
     application.include_router(v1_router)
+
+    # Serve static files
+    application.mount("/static", StaticFiles(directory="if_rest/static"), name="static")
+
+    @application.get("/", response_class=HTMLResponse)
+    async def root(request: Request):
+        with open("if_rest/static/index.html", "r") as f:
+            content = f.read()
+        return HTMLResponse(content=content)
 
     return application
 

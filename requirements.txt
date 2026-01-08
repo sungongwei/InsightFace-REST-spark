@@ -24,5 +24,6 @@ imageio
 aiohttp
 tenacity
 colorlog
+faiss-cpu
 
 

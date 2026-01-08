@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Search System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .form-group {
+            margin: 10px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"], input[type="file"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .results {
+            margin-top: 20px;
+        }
+        
+        .face-item {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .face-match {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .face-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .face-details {
+            flex-grow: 1;
+        }
+        
+        .similarity-score {
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Face Search System</h1>
+
+        <div class="section">
+            <h2>API Configuration</h2>
+            <div class="form-group">
+                <label for="apiUrlInput">API Server Address:</label>
+                <input type="text" id="apiUrlInput" name="apiUrl" placeholder="Leave empty to use default server (e.g., http://localhost:18080 or https://myserver.com)" style="width: 100%;">
+                <small>Example: http://localhost:18080 or https://myserver.com</small>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Search for Similar Faces</h2>
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="queryImage">Upload Query Image:</label>
+                    <input type="file" id="queryImage" name="file" accept="image/*" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxResults">Max Results (k):</label>
+                    <input type="number" id="maxResults" name="k" value="5" min="1" max="20">
+                </div>
+
+                <div class="form-group">
+                    <label for="similarityThreshold">Similarity Threshold:</label>
+                    <input type="number" id="similarityThreshold" name="threshold" value="0.6" min="0" max="1" step="0.01">
+                </div>
+
+                <button type="submit">Search Similar Faces</button>
+            </form>
+
+            <div id="queryImagePreview" class="image-preview" style="display: none;"></div>
+        </div>
+        
+        <div id="statusMessage" class="status" style="display: none;"></div>
+        
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        // Get API base URL from input or use default
+        function getApiBaseUrl() {
+            const apiUrlInput = document.getElementById('apiUrlInput');
+            if (apiUrlInput && apiUrlInput.value.trim() !== '') {
+                let url = apiUrlInput.value.trim();
+                // Remove trailing slash if present
+                if (url.endsWith('/')) {
+                    url = url.slice(0, -1);
+                }
+                // Ensure it starts with http:// or https://
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'http://' + url;
+                }
+                return url;
+            }
+            return '';
+        }
+
+        // Show status message
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${isError ? 'error' : 'success'}`;
+            statusDiv.style.display = 'block';
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Handle image preview
+        document.getElementById('queryImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('queryImagePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.innerHTML = `<img src="${event.target.result}" class="image-preview" alt="Query Image Preview">`;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+        
+        // Search form submission
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const file = document.getElementById('queryImage').files[0];
+            const k = document.getElementById('maxResults').value;
+            const threshold = document.getElementById('similarityThreshold').value;
+
+            if (!file) {
+                showStatus('Please select an image file', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('k', k);
+            formData.append('threshold', threshold);
+
+            try {
+                showStatus('Searching for similar faces...');
+
+                const baseUrl = getApiBaseUrl();
+                const response = await fetch(`${baseUrl}/api/v1/search`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const results = await response.json();
+
+                if (response.ok) {
+                    displaySearchResults(results);
+                    showStatus(`Found ${results.length} similar faces!`);
+                } else {
+                    showStatus(`Error: ${results.detail || 'Search failed'}`, true);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, true);
+            }
+        });
+        
+        // Display search results
+        function displaySearchResults(results) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p>No similar faces found.</p>';
+                return;
+            }
+            
+            let html = `<h3>Search Results (${results.length} matches found):</h3>`;
+            
+            results.forEach(result => {
+                html += `
+                <div class="face-match">
+                    <div class="face-details">
+                        <h4>${result.name}</h4>
+                        <p><strong>ID:</strong> ${result.id}</p>
+                        <p><strong>Gender:</strong> ${result.gender !== null ? result.gender : 'N/A'}</p>
+                        <p><strong>Age:</strong> ${result.age !== null ? result.age : 'N/A'}</p>
+                        <p><strong>Similarity:</strong> <span class="similarity-score">${(result.similarity * 100).toFixed(2)}%</span></p>
+                        <p><strong>Added:</strong> ${result.created_at}</p>
+                    </div>
+                </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

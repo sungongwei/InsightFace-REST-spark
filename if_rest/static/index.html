@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightFace-REST Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .card h2 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 200px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>InsightFace-REST Dashboard</h1>
+        
+        <p>Welcome to the InsightFace-REST API with face management and search capabilities.</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>Face Management</h3>
+                <p>Add, update, delete, and search faces in the database</p>
+            </div>
+            <div class="feature">
+                <h3>Face Search</h3>
+                <p>Find similar faces using FAISS-based similarity search</p>
+            </div>
+            <div class="feature">
+                <h3>Face Recognition</h3>
+                <p>Extract embeddings and detect faces in images</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Web Interfaces</h2>
+            <a href="/static/face_management.html" class="btn">Face Management</a>
+            <a href="/static/face_search.html" class="btn">Face Search</a>
+            <a href="/docs" class="btn btn-secondary">API Documentation</a>
+        </div>
+
+        <div class="card">
+            <h2>Features</h2>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Face Management: Add, update, delete, and search faces</li>
+                <li>Face Search: Find similar faces using FAISS-based similarity search</li>
+                <li>API Connectivity: Connect to local or remote API servers</li>
+                <li>GPU Support: Optional GPU acceleration for similarity search</li>
+                <li>Data Persistence: Docker volumes for persistent storage</li>
+                <li>Bulk Registration: Scripts to register multiple faces at once</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>About</h2>
+            <p>This system provides face management and search capabilities using:</p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>SQLite for face data storage</li>
+                <li>FAISS for fast similarity search</li>
+                <li>InsightFace for face detection and recognition</li>
+                <li>FastAPI for the REST API</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

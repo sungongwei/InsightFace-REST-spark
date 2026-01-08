@@ -7,6 +7,8 @@ x-base_service: &base_service
       - &app ../if_rest:/app/if_rest
       - &entrypoint ../entrypoint.sh:/app/entrypoint.sh
       - &v_nginx ../misc/nginx_conf/conf.d:/etc/nginx/conf.d
+      # Volume for persistent face data storage
+      - &face_data face_data:/app/data
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:18080/health" ]
       interval: 300s
@@ -30,6 +32,12 @@ services:
       - *app
       - *entrypoint
       - *models
+      - *face_data
+    environment:
+      # Set the database path to use the persistent volume
+      - DB_PATH=/app/data/faces.db
+      # Enable GPU
+      - USE_GPU=true
     deploy:
       resources:
         reservations:
@@ -51,6 +59,12 @@ services:
       - *app
       - *entrypoint
       - *models
+      - *face_data
+    environment:
+      # Set the database path to use the persistent volume
+      - DB_PATH=/app/data/faces.db
+      # Enable GPU
+      - USE_GPU=true
     deploy:
       resources:
         reservations:
@@ -75,6 +89,12 @@ services:
       - *app
       - *entrypoint
       - *models
+      - *face_data
+    environment:
+      # Set the database path to use the persistent volume
+      - DB_PATH=/app/data/faces.db
+      # Disable GPU for CPU version
+      - USE_GPU=false
 
   nginx:
     profiles: ['mgpu']
@@ -90,5 +110,8 @@ services:
       nofile:
         soft: 200000
         hard: 200000
+
+volumes:
+  face_data:
 
 
