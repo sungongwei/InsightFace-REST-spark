@@ -269,7 +269,7 @@
         async function searchFacesByName(name) {
             try {
                 const baseUrl = getApiBaseUrl();
-                const response = await fetch(`${baseUrl}/v1/faces/search?name=${encodeURIComponent(name)}`);
+                const response = await fetch(`${baseUrl}/v1/faces?name=${encodeURIComponent(name)}`);
                 const faces = await response.json();
 
                 if (response.ok) {

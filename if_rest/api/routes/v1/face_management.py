@@ -106,38 +106,16 @@ async def get_face(face_id: int) -> FaceResponse:
 
 
 @router.get('/faces', tags=['Face Management'])
-async def get_all_faces() -> List[FaceResponse]:
+async def get_all_faces(name: Optional[str] = None) -> List[FaceResponse]:
     """
     Get all faces from the database.
     """
     if face_manager is None:
         raise HTTPException(status_code=500, detail="Face manager not initialized")
-
-    faces = face_manager.get_all_faces()
-
-    return [
-        FaceResponse(
-            id=face['id'],
-            name=face['name'],
-            gender=face['gender'],
-            age=face['age'],
-            image_data=base64.b64encode(face['image_data']).decode('utf-8') if face['image_data'] else None,
-            created_at=face['created_at'],
-            updated_at=face['updated_at']
-        )
-        for face in faces
-    ]
-
-
-@router.get('/faces/search', tags=['Face Management'])
-async def search_faces_by_name(name: str) -> List[FaceResponse]:
-    """
-    Search faces by name (partial match).
-    """
-    if face_manager is None:
-        raise HTTPException(status_code=500, detail="Face manager not initialized")
-
-    faces = face_manager.get_faces_by_name(name)
+    if name:
+        faces = face_manager.get_faces_by_name(name)
+    else:
+        faces = face_manager.get_all_faces()
 
     return [
         FaceResponse(
@@ -151,7 +129,6 @@ async def search_faces_by_name(name: str) -> List[FaceResponse]:
         )
         for face in faces
     ]
-
 
 @router.put('/faces/{face_id}', tags=['Face Management'])
 async def update_face(

@@ -95,7 +95,7 @@ docker-compose -f compose/docker-compose-v2.yml --profile cpu up -d
 - `POST /v1/faces` - Add a new face
 - `GET /v1/faces/{id}` - Get face by ID
 - `GET /v1/faces` - Get all faces
-- `GET /v1/faces/search?name=` - Search faces by name
+- `GET /v1/faces?name=` - Search faces by name
 - `PUT /v1/faces/{id}` - Update face
 - `DELETE /v1/faces/{id}` - Delete face by ID
 - `DELETE /v1/faces?name=` - Delete all faces by name
