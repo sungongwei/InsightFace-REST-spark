@@ -42,6 +42,8 @@ async def lifespan(_: FastAPI):
     Raises:
         Exception: If an error occurs during processing initialization.
     """
+    processing = None
+    face_manager_instance = None
 
     logger.info(f"Starting processing module...")
     try:
@@ -58,13 +60,31 @@ async def lifespan(_: FastAPI):
 
         # Initialize face manager with GPU support based on environment variable
         use_gpu = os.getenv('USE_GPU', 'false').lower() == 'true'
-        face_manager = FaceManager(processing=processing, use_gpu=use_gpu)
-        set_face_manager(face_manager)
+        face_manager_instance = FaceManager(processing=processing, use_gpu=use_gpu)
+        set_face_manager(face_manager_instance)
         logger.info(f"Face manager ready! GPU support: {use_gpu}")
     except Exception as e:
         logger.error(e)
         exit(1)
+
     yield
+
+    # Shutdown: clean up resources
+    logger.info("Shutting down application...")
+    if face_manager_instance:
+        try:
+            # Save FAISS index on shutdown
+            face_manager_instance.search_engine.save_index()
+            logger.info("FAISS index saved successfully")
+        except Exception as e:
+            logger.error(f"Error saving FAISS index: {e}")
+
+    if processing:
+        try:
+            await processing.stop()
+            logger.info("Processing module stopped")
+        except Exception as e:
+            logger.error(f"Error stopping processing: {e}")
 
 
 from fastapi.responses import HTMLResponse

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Depends
 from pydantic import BaseModel
 
@@ -12,11 +12,11 @@ router = APIRouter()
 class SearchResponse(BaseModel):
     id: int
     name: str
-    gender: int = None
-    age: int = None
+    gender: Optional[int] = None
+    age: Optional[int] = None
     similarity: float
-    created_at: str = None
-    updated_at: str = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
 
 @router.post('/search', tags=['Face Search'])
