@@ -37,6 +37,13 @@ def set_face_manager(fm: FaceManager):
     face_manager = fm
 
 
+def get_face_manager():
+    """Dependency to get the face manager instance"""
+    if face_manager is None:
+        raise HTTPException(status_code=500, detail="Face manager not initialized")
+    return face_manager
+
+
 @router.post('/faces', tags=['Face Management'])
 async def add_face(
     name: str = Form(...),
