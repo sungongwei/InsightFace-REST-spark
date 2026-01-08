@@ -126,10 +126,18 @@ async def recognition_worker(
                 )
 
                 # Attach results to corresponding tasks
-                for i, item in enumerate(resp['data']):
-                    valid_tasks[i].result = item
+                if 'data' in resp:
+                    for i, item in enumerate(resp['data']):
+                        valid_tasks[i].result = item
+                else:
+                    # If server returned an error but we got a response (e.g. 500 error)
+                    error_msg = resp.get('detail', 'Unknown error')
+                    print(f"Server error: {error_msg}")
+                    for task in valid_tasks:
+                        task.result = {'status': 'error', 'message': error_msg}
             except Exception as e:
                 # Handle API processing errors
+                print(e)
                 print(f"Recognition error: {str(e)}")
                 for task in valid_tasks:
                     # Create error result for failed tasks
@@ -253,9 +261,9 @@ async def main(images_dir: str, host: str, port: int):
 
 if __name__ == "__main__":
     # Configuration
-    host = 'http://localhost'  # Recognition API host
+    host = 'http://192.168.31.143'  # Recognition API host
     port = 18081  # Recognition API port
-    images_dir = 'misc/test_images'  # Directory with images to process
+    images_dir = 'downloads'  # Directory with images to process
 
     # Run main pipeline
     asyncio.run(main(

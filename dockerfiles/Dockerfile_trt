@@ -6,7 +6,8 @@ ENV PIP_INSTALL="python -m pip --no-cache-dir install --upgrade"
 
 RUN apt-get update &&\
     apt-get install -y\
-            libgl1-mesa-glx \
+            libgl1\
+            libgl1-mesa-dev \
             protobuf-compiler \
             libprotoc-dev \
             libb64-0d \
@@ -18,7 +19,8 @@ RUN apt-get update &&\
 COPY requirements.txt .
 RUN $PIP_INSTALL -r requirements.txt
 # GPU specific packages
-RUN $PIP_INSTALL cupy-cuda12x pynvjpeg
+RUN $PIP_INSTALL cupy-cuda12x 
+RUN $PIP_INSTALL --no-build-isolation pynvjpeg
 
 WORKDIR /app
 COPY if_rest /app/if_rest

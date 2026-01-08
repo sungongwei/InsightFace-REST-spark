@@ -47,7 +47,7 @@ def max_pool2d(A, kernel_size=3, stride=1, padding=1):
 
 
 def get_topk_score_indices(hm_pool, hm, k):
-    ary = ((hm_pool == hm).astype(np.bool) * hm).reshape(-1)
+    ary = ((hm_pool == hm).astype(bool) * hm).reshape(-1)
     indices = ary.argsort()[::-1][:k]
     scores = ary[indices]
     return scores, indices

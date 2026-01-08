@@ -167,6 +167,8 @@ class IFRClientAsync:
             # Standard JSON format
             resp = await self.sess.post(extract_uri, json=req, timeout=120)
 
+        resp.raise_for_status()
+
         content = await resp.read()
 
         if resp.headers['content-type'] == 'application/x-msgpack':

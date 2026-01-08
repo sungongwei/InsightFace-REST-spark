@@ -166,6 +166,8 @@ class IFRClient:
             # Standard JSON format
             resp = self.sess.post(extract_uri, json=req, timeout=120)
 
+        resp.raise_for_status()
+
         # Parse response based on content type
         if resp.headers['content-type'] == 'application/x-msgpack':
             content = msgpack.loads(resp.content)
