@@ -86,7 +86,7 @@ def get_app() -> FastAPI:
         allow_methods=['*'],
         allow_headers=['*']
     )
-    application.include_router(v1_router)
+    application.include_router(v1_router, prefix="/v1")
 
     # Serve static files
     application.mount("/static", StaticFiles(directory="if_rest/static"), name="static")
@@ -96,6 +96,30 @@ def get_app() -> FastAPI:
         with open("if_rest/static/index.html", "r") as f:
             content = f.read()
         return HTMLResponse(content=content)
+
+    # Serve face images
+    @application.get("/api/v1/face_images/{filename}")
+    async def get_face_image(filename: str):
+        import os
+        from fastapi.responses import FileResponse
+        from fastapi import HTTPException
+
+        # Use the environment variable to get the data directory
+        db_path = os.getenv('DB_PATH', 'faces.db')
+        data_dir = os.path.dirname(db_path) if os.path.dirname(db_path) else 'data'
+        face_images_dir = os.path.join(data_dir, 'face_images')
+
+        image_path = os.path.join(face_images_dir, filename)
+
+        # Check if the file exists and is in the correct directory
+        if not os.path.exists(image_path):
+            raise HTTPException(status_code=404, detail="Image not found")
+
+        # Verify that the path is within the allowed directory (security check)
+        if not os.path.abspath(image_path).startswith(os.path.abspath(face_images_dir)):
+            raise HTTPException(status_code=403, detail="Access forbidden")
+
+        return FileResponse(image_path)
 
     return application
 
