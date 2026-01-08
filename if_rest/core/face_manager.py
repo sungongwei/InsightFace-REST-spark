@@ -44,7 +44,7 @@ class FaceManager:
             extract_embedding=extract_embedding,
             extract_ga=True,
             return_face_data=True,
-            threshold=0.6
+            threshold=0.5
         )
         
         # Get the first face from the first image
@@ -178,7 +178,7 @@ class FaceManager:
         return self.db.delete_faces_by_name(name)
     
     def search_similar_faces(self, query_embedding: np.ndarray, k: int = 5, 
-                           threshold: float = 0.6) -> List[Dict[str, Any]]:
+                           threshold: float = 0.5) -> List[Dict[str, Any]]:
         """
         Search for similar faces to the query embedding.
         
@@ -202,7 +202,7 @@ class FaceManager:
         return similar_faces
     
     async def search_faces_by_image(self, image_data: bytes, k: int = 5,
-                            threshold: float = 0.6) -> List[Dict[str, Any]]:
+                            threshold: float = 0.5) -> List[Dict[str, Any]]:
         """
         Search for similar faces by providing an image.
 
@@ -226,7 +226,7 @@ class FaceManager:
             extract_embedding=True,
             extract_ga=False,
             return_face_data=False,
-            threshold=0.6
+            threshold=0.5
         )
 
         # Get the first face from the first image

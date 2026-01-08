@@ -154,7 +154,7 @@ class YoloV5(AbstractDetector):
         logger.debug(f'Inference cost: {(t1 - t0) * 1000:.3f} ms.')
         return net_outs
 
-    def _postprocess(self, net_outs, threshold=0.6):
+    def _postprocess(self, net_outs, threshold=0.5):
         """
         Process network outputs
 

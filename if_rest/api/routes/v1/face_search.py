@@ -23,7 +23,7 @@ class SearchResponse(BaseModel):
 async def search_similar_faces(
     file: UploadFile = File(...),
     k: int = Form(5),
-    threshold: float = Form(0.6),
+    threshold: float = Form(0.5),
     face_manager = Depends(get_face_manager)
 ) -> List[SearchResponse]:
     """
@@ -31,7 +31,7 @@ async def search_similar_faces(
 
     - **file**: Query image containing the face to search for
     - **k**: Number of top results to return (default: 5)
-    - **threshold**: Minimum similarity threshold (default: 0.6)
+    - **threshold**: Minimum similarity threshold (default: 0.5)
     """
     if not file:
         raise HTTPException(status_code=400, detail="Image file is required")
@@ -64,7 +64,7 @@ async def search_similar_faces(
 async def search_by_embedding(
     embedding: str = Form(...),  # JSON string of embedding array
     k: int = Form(5),
-    threshold: float = Form(0.6),
+    threshold: float = Form(0.5),
     face_manager = Depends(get_face_manager)
 ) -> List[SearchResponse]:
     """
@@ -72,7 +72,7 @@ async def search_by_embedding(
 
     - **embedding**: JSON string of the embedding array
     - **k**: Number of top results to return (default: 5)
-    - **threshold**: Minimum similarity threshold (default: 0.6)
+    - **threshold**: Minimum similarity threshold (default: 0.5)
     """
     import json
     import numpy as np

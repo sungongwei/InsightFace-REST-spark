@@ -89,7 +89,7 @@ class Processing:
     async def extract(self,
                       images: Images,
                       max_size: List[int] = None,
-                      threshold: float = 0.6,
+                      threshold: float = 0.5,
                       limit_faces: int = 0,
                       min_face_size: int = 0,
                       embed_only: bool = False,
@@ -108,7 +108,7 @@ class Processing:
         Args:
             images (Dict[str, list]): A dictionary containing image data.
             max_size (List[int]): The maximum size for images. Defaults to None.
-            threshold (float): The threshold for face detection. Defaults to 0.6.
+            threshold (float): The threshold for face detection. Defaults to 0.5.
             limit_faces (int): The maximum number of faces to detect. Defaults to 0.
             min_face_size (int): The minimum size of a face to detect. Defaults to 0.
             embed_only (bool): Whether to only extract embeddings. Defaults to False.
@@ -170,7 +170,7 @@ class Processing:
 
     async def draw(self,
                    images: Images,
-                   threshold: float = 0.6,
+                   threshold: float = 0.5,
                    draw_landmarks: bool = True,
                    draw_scores: bool = True,
                    draw_sizes: bool = True,
@@ -186,7 +186,7 @@ class Processing:
 
         Args:
             images (Union[Dict[str, list], bytes]): The input image data.
-            threshold (float): The threshold for face detection. Defaults to 0.6.
+            threshold (float): The threshold for face detection. Defaults to 0.5.
             draw_landmarks (bool): Whether to draw landmarks. Defaults to True.
             draw_scores (bool): Whether to draw scores. Defaults to True.
             draw_sizes (bool): Whether to draw sizes. Defaults to True.

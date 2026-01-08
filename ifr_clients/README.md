@@ -87,7 +87,7 @@ Main method for face processing. Available in both sync and async versions.
 |-----------|------|---------|------------------------------------------------|
 | `data` | `List[Union[str, bytes]]` | **Required** | Image paths/URLs or raw bytes                  |
 | `mode` | `Literal['paths', 'data']` | `'paths'` | Input type (`paths`=URLs/paths, `data`=binary) |
-| `threshold` | `float` | 0.6 | Confidence threshold (0.0-1.0)                 |
+| `threshold` | `float` | 0.5 | Confidence threshold (0.0-1.0)                 |
 | `extract_embedding` | `bool` | `True` | Calculate 512D face embeddings                 |
 | `return_face_data` | `bool` | `False` | Include cropped face images in response        |
 | `return_landmarks` | `bool` | `False` | Include facial landmarks                       |

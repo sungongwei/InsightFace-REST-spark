@@ -328,7 +328,7 @@ class FaceAnalysis:
                   detect_masks: bool = True,
                   return_face_data: bool = True,
                   max_size: List[int] = None,
-                  threshold: float = 0.6,
+                  threshold: float = 0.5,
                   min_face_size: int = 0,
                   mask_thresh: float = 0.89,
                   limit_faces: int = 0,
@@ -343,7 +343,7 @@ class FaceAnalysis:
             detect_masks (bool, optional): Whether to detect masks on faces. Defaults to False.
             return_face_data (bool, optional): Whether to return face data in the output. Defaults to False.
             max_size (List[int], optional): The maximum size of the input images. Defaults to None.
-            threshold (float, optional): The detection threshold. Defaults to 0.6.
+            threshold (float, optional): The detection threshold. Defaults to 0.5.
             limit_faces (int, optional): The maximum number of faces to detect per image. Defaults to 0.
             min_face_size (int, optional): The minimum face size to detect. Defaults to 0.
             mask_thresh (float, optional): The mask detection threshold. Defaults to 0.89.
@@ -506,7 +506,7 @@ class FaceAnalysis:
     async def embed(self,
                     images: Dict[str, list],
                     max_size: List[int] = None,
-                    threshold: float = 0.6,
+                    threshold: float = 0.5,
                     limit_faces: int = 0,
                     min_face_size: int = 0,
                     return_face_data: bool = False,
@@ -520,7 +520,7 @@ class FaceAnalysis:
         Args:
             images (List[np.ndarray]): A list of image arrays.
             max_size (List[int], optional): The maximum size of the input images. Defaults to None.
-            threshold (float, optional): The detection threshold. Defaults to 0.6.
+            threshold (float, optional): The detection threshold. Defaults to 0.5.
             limit_faces (int, optional): The maximum number of faces to detect per image. Defaults to 0.
             min_face_size (int, optional): The minimum face size to detect. Defaults to 0.
             return_face_data (bool, optional): Whether to return face data in the output. Defaults to False.

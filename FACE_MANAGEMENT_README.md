@@ -53,8 +53,8 @@ python -m if_rest.api.main
    - Face search: http://localhost:18080/static/face_search.html
 
 3. API endpoints:
-   - Face management: `/api/v1/faces`
-   - Face search: `/api/v1/search`
+   - Face management: `/v1/faces`
+   - Face search: `/v1/search`
 
 ## Docker Deployment with Persistent Storage
 
@@ -92,17 +92,17 @@ docker-compose -f compose/docker-compose-v2.yml --profile cpu up -d
 ## API Endpoints
 
 ### Face Management
-- `POST /api/v1/faces` - Add a new face
-- `GET /api/v1/faces/{id}` - Get face by ID
-- `GET /api/v1/faces` - Get all faces
-- `GET /api/v1/faces/search?name=` - Search faces by name
-- `PUT /api/v1/faces/{id}` - Update face
-- `DELETE /api/v1/faces/{id}` - Delete face by ID
-- `DELETE /api/v1/faces?name=` - Delete all faces by name
+- `POST /v1/faces` - Add a new face
+- `GET /v1/faces/{id}` - Get face by ID
+- `GET /v1/faces` - Get all faces
+- `GET /v1/faces/search?name=` - Search faces by name
+- `PUT /v1/faces/{id}` - Update face
+- `DELETE /v1/faces/{id}` - Delete face by ID
+- `DELETE /v1/faces?name=` - Delete all faces by name
 
 ### Face Search
-- `POST /api/v1/search` - Search for similar faces using image
-- `POST /api/v1/search/embedding` - Search for similar faces using embedding
+- `POST /v1/search` - Search for similar faces using image
+- `POST /v1/search/embedding` - Search for similar faces using embedding
 
 ## Database
 

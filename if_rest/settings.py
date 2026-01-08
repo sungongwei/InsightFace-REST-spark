@@ -41,7 +41,7 @@ class Defaults(BaseSettings):
     extract_embedding: bool = True
     extract_ga: bool = False
     detect_masks: bool = False
-    det_thresh: float = 0.6
+    det_thresh: float = 0.5
     img_req_headers: dict = headers
     sslv3_hack: bool = False
 

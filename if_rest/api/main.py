@@ -119,7 +119,7 @@ def get_app() -> FastAPI:
         return HTMLResponse(content=content)
 
     # Serve face images
-    @application.get("/api/v1/face_images/{filename}")
+    @application.get("/v1/face_images/{filename}")
     async def get_face_image(filename: str):
         import os
         from fastapi.responses import FileResponse

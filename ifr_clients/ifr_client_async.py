@@ -85,7 +85,7 @@ class IFRClientAsync:
             self,
             data: List[Union[str, bytes]],
             mode: Literal['paths', 'data'] = 'paths',
-            threshold: float = 0.6,
+            threshold: float = 0.5,
             extract_embedding: bool = True,
             return_face_data: bool = False,
             return_landmarks: bool = False,

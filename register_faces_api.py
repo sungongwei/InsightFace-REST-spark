@@ -46,7 +46,7 @@ async def register_face_via_api(session: aiohttp.ClientSession, api_url: str, im
         data.add_field('file', image_data, filename=image_path.name, content_type='image/jpeg')
         
         # Make API request
-        async with session.post(f"{api_url}/api/v1/faces", data=data) as response:
+        async with session.post(f"{api_url}/v1/faces", data=data) as response:
             if response.status == 200:
                 result = await response.json()
                 if verbose:

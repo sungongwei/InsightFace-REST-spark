@@ -47,7 +47,7 @@ async def extract(data: BodyExtract,
     parameters in following format:
 
        - **images**: dict containing either links or data lists. (*required*)
-       - **threshold**: Detection threshold. Default: 0.6 (*optional*)
+       - **threshold**: Detection threshold. Default: 0.5 (*optional*)
        - **embed_only**: Treat input images as face crops (112x112 crops required), omit detection step. Default: False (*optional*)
        - **return_face_data**: Return face crops encoded in base64. Default: False (*optional*)
        - **return_landmarks**: Return face landmarks. Default: False (*optional*)
@@ -89,7 +89,7 @@ async def draw(data: BodyDraw,
     Return image with drawn faces for testing purposes.
 
        - **images**: dict containing either links or data lists. (*required*)
-       - **threshold**: Detection threshold. Default: 0.6 (*optional*)
+       - **threshold**: Detection threshold. Default: 0.5 (*optional*)
        - **draw_landmarks**: Draw faces landmarks Default: True (*optional*)
        - **draw_scores**: Draw detection scores Default: True (*optional*)
        - **draw_sizes**: Draw face sizes Default: True (*optional*)
@@ -109,7 +109,7 @@ async def draw(data: BodyDraw,
 
 
 @router.post('/multipart/draw_detections', tags=['Detection & recognition'])
-async def draw_upl(processing: ProcessingDep, file: bytes = File(...), threshold: float = Form(0.6),
+async def draw_upl(processing: ProcessingDep, file: bytes = File(...), threshold: float = Form(0.5),
                    draw_landmarks: bool = Form(True),
                    draw_scores: bool = Form(True), draw_sizes: bool = Form(True), limit_faces: int = Form(0),
                    use_rotation: bool = Form(False)):
@@ -117,7 +117,7 @@ async def draw_upl(processing: ProcessingDep, file: bytes = File(...), threshold
     Return image with drawn faces for testing purposes.
 
        - **file**: Image file (*required*)
-       - **threshold**: Detection threshold. Default: 0.6 (*optional*)
+       - **threshold**: Detection threshold. Default: 0.5 (*optional*)
        - **draw_landmarks**: Draw faces landmarks Default: True (*optional*)
        - **draw_scores**: Draw detection scores Default: True (*optional*)
        - **draw_sizes**: Draw face sizes Default: True (*optional*)

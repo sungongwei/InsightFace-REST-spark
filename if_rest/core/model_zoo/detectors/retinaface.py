@@ -253,7 +253,7 @@ class RetinaFace(AbstractDetector):
 
         self._num_anchors = dict(zip(self.fpn_keys, [anchors.shape[0] for anchors in self._anchors_fpn.values()]))
 
-    def detect(self, imgs: Union[list, tuple], threshold: float = 0.6):
+    def detect(self, imgs: Union[list, tuple], threshold: float = 0.5):
 
         if not isinstance(imgs, tuple):
             imgs = (imgs)

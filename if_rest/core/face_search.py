@@ -131,7 +131,7 @@ class FaceSearchEngine:
         # Persist the updated index
         self.save_index()
     
-    def search(self, query_embedding: np.ndarray, k: int = 5, threshold: float = 0.6) -> List[Tuple[int, float]]:
+    def search(self, query_embedding: np.ndarray, k: int = 5, threshold: float = 0.5) -> List[Tuple[int, float]]:
         """
         Search for similar faces to the query embedding.
         
