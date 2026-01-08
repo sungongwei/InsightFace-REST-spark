@@ -58,11 +58,15 @@ class FaceManager:
                 
                 # Get the face crop if available
                 face_crop = None
-                if face_data.get('facedata'):
+                if face_data.get('facedata') is not None:
                     # Convert the face crop to bytes
-                    is_success, buffer = cv2.imencode(".jpg", face_data['facedata'])
-                    if is_success:
-                        face_crop = buffer.tobytes()
+                    try:
+                        is_success, buffer = cv2.imencode(".jpg", face_data['facedata'])
+                        if is_success:
+                            face_crop = buffer.tobytes()
+                    except Exception as e:
+                        print(f"Error encoding face image: {e}")
+                        face_crop = None
                 
                 # Add to database
                 face_id = self.db.add_face(

@@ -181,6 +181,7 @@
                 }
                 return url;
             }
+            // Return empty string to use relative paths (default server)
             return '';
         }
 
@@ -215,7 +216,7 @@
 
             try {
                 const baseUrl = getApiBaseUrl();
-                const response = await fetch(`${baseUrl}/api/v1/faces`, {
+                const response = await fetch(`${baseUrl}/faces`, {
                     method: 'POST',
                     body: formData
                 });
@@ -251,7 +252,7 @@
         async function loadAllFaces() {
             try {
                 const baseUrl = getApiBaseUrl();
-                const response = await fetch(`${baseUrl}/api/v1/faces`);
+                const response = await fetch(`${baseUrl}/faces`);
                 const faces = await response.json();
 
                 if (response.ok) {
@@ -268,7 +269,7 @@
         async function searchFacesByName(name) {
             try {
                 const baseUrl = getApiBaseUrl();
-                const response = await fetch(`${baseUrl}/api/v1/faces/search?name=${encodeURIComponent(name)}`);
+                const response = await fetch(`${baseUrl}/faces/search?name=${encodeURIComponent(name)}`);
                 const faces = await response.json();
 
                 if (response.ok) {
@@ -319,7 +320,7 @@
 
             try {
                 const baseUrl = getApiBaseUrl();
-                const response = await fetch(`${baseUrl}/api/v1/faces/${faceId}`, {
+                const response = await fetch(`${baseUrl}/faces/${faceId}`, {
                     method: 'DELETE'
                 });
 
