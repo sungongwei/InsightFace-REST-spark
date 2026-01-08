@@ -87,6 +87,10 @@ class FaceSearchEngine:
         query_norm = query_norm.astype('float32').reshape(1, -1)
         
         # Perform similarity search
+        # Ensure k is at least 1 and we have faces in the index
+        if len(self.face_ids) == 0:
+            return []  # No faces to search
+
         similarities, indices = self.index.search(query_norm, min(k, len(self.face_ids)))
         
         results = []
