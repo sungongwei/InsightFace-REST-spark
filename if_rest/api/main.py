@@ -58,11 +58,12 @@ async def lifespan(_: FastAPI):
         await processing.start(dl_client=dl_client)
         logger.info(f"Processing module ready!")
 
-        # Initialize face manager with GPU support based on environment variable
+        # Initialize face manager with GPU support and database path from environment variable
         use_gpu = os.getenv('USE_GPU', 'false').lower() == 'true'
-        face_manager_instance = FaceManager(processing=processing, use_gpu=use_gpu)
+        db_path = os.getenv('DB_PATH', 'faces.db')  # Use environment variable for database path
+        face_manager_instance = FaceManager(db_path=db_path, processing=processing, use_gpu=use_gpu)
         set_face_manager(face_manager_instance)
-        logger.info(f"Face manager ready! GPU support: {use_gpu}")
+        logger.info(f"Face manager ready! GPU support: {use_gpu}, DB path: {db_path}")
     except Exception as e:
         logger.error(e)
         exit(1)

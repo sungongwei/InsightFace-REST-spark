@@ -51,11 +51,22 @@ class FaceSearchEngine:
         """Save FAISS index and face_ids to disk."""
         faiss_index_path = self.get_faiss_index_path()
 
+        # Ensure the directory for the FAISS index file exists
+        faiss_dir = os.path.dirname(faiss_index_path)
+        if faiss_dir:  # Only create directory if path contains a directory part
+            os.makedirs(faiss_dir, exist_ok=True)
+
         # Save FAISS index
         faiss.write_index(self.index, faiss_index_path)
 
         # Save face_ids separately (since they're Python objects)
         face_ids_path = f"{os.path.splitext(faiss_index_path)[0]}_face_ids.pkl"
+
+        # Ensure the directory for the face_ids file exists
+        face_ids_dir = os.path.dirname(face_ids_path)
+        if face_ids_dir:  # Only create directory if path contains a directory part
+            os.makedirs(face_ids_dir, exist_ok=True)
+
         with open(face_ids_path, 'wb') as f:
             pickle.dump(self.face_ids, f)
 

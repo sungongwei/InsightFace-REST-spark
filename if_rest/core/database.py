@@ -17,6 +17,12 @@ class FaceDatabase:
     def __init__(self, db_path: str = None):
         # Use environment variable if provided, otherwise default to faces.db
         self.db_path = db_path or os.getenv('DB_PATH', 'faces.db')
+
+        # Ensure the directory for the database file exists
+        db_dir = os.path.dirname(self.db_path)
+        if db_dir:  # Only create directory if path contains a directory part
+            os.makedirs(db_dir, exist_ok=True)
+
         self.init_db()
     
     def init_db(self):
