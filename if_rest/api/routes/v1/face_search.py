@@ -3,7 +3,7 @@ from fastapi import APIRouter, File, UploadFile, Form, HTTPException
 from pydantic import BaseModel
 
 from if_rest.core.face_manager import FaceManager
-from if_rest.api.routes.v1.face_management import FaceResponse
+from if_rest.api.routes.v1.face_management import FaceResponse, face_manager
 
 
 router = APIRouter()
