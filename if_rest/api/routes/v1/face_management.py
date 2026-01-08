@@ -1,3 +1,4 @@
+import base64
 from typing import Annotated, List, Optional
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
@@ -15,6 +16,7 @@ class FaceResponse(BaseModel):
     name: str
     gender: Optional[int] = None
     age: Optional[int] = None
+    image_data: Optional[str] = None  # Base64 encoded image data
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
     similarity: Optional[float] = None
@@ -74,7 +76,8 @@ async def add_face(
         id=result['id'],
         name=result['name'],
         gender=result['gender'],
-        age=result['age']
+        age=result['age'],
+        image_data=base64.b64encode(result['image_data']).decode('utf-8') if result['image_data'] else None
     )
 
 
@@ -85,17 +88,18 @@ async def get_face(face_id: int) -> FaceResponse:
     """
     if face_manager is None:
         raise HTTPException(status_code=500, detail="Face manager not initialized")
-    
+
     face = face_manager.get_face_by_id(face_id)
-    
+
     if not face:
         raise HTTPException(status_code=404, detail="Face not found")
-    
+
     return FaceResponse(
         id=face['id'],
         name=face['name'],
         gender=face['gender'],
         age=face['age'],
+        image_data=base64.b64encode(face['image_data']).decode('utf-8') if face['image_data'] else None,
         created_at=face['created_at'],
         updated_at=face['updated_at']
     )
@@ -108,15 +112,16 @@ async def get_all_faces() -> List[FaceResponse]:
     """
     if face_manager is None:
         raise HTTPException(status_code=500, detail="Face manager not initialized")
-    
+
     faces = face_manager.get_all_faces()
-    
+
     return [
         FaceResponse(
             id=face['id'],
             name=face['name'],
             gender=face['gender'],
             age=face['age'],
+            image_data=base64.b64encode(face['image_data']).decode('utf-8') if face['image_data'] else None,
             created_at=face['created_at'],
             updated_at=face['updated_at']
         )
@@ -131,15 +136,16 @@ async def search_faces_by_name(name: str) -> List[FaceResponse]:
     """
     if face_manager is None:
         raise HTTPException(status_code=500, detail="Face manager not initialized")
-    
+
     faces = face_manager.get_faces_by_name(name)
-    
+
     return [
         FaceResponse(
             id=face['id'],
             name=face['name'],
             gender=face['gender'],
             age=face['age'],
+            image_data=base64.b64encode(face['image_data']).decode('utf-8') if face['image_data'] else None,
             created_at=face['created_at'],
             updated_at=face['updated_at']
         )
@@ -157,21 +163,21 @@ async def update_face(
     """
     if face_manager is None:
         raise HTTPException(status_code=500, detail="Face manager not initialized")
-    
+
     # Check if face exists
     existing_face = face_manager.get_face_by_id(face_id)
     if not existing_face:
         raise HTTPException(status_code=404, detail="Face not found")
-    
+
     # Update the face
     updated = face_manager.update_face(
         face_id=face_id,
         name=request.name
     )
-    
+
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to update face")
-    
+
     # Return updated face
     updated_face = face_manager.get_face_by_id(face_id)
     return FaceResponse(
@@ -179,6 +185,7 @@ async def update_face(
         name=updated_face['name'],
         gender=updated_face['gender'],
         age=updated_face['age'],
+        image_data=base64.b64encode(updated_face['image_data']).decode('utf-8') if updated_face['image_data'] else None,
         created_at=updated_face['created_at'],
         updated_at=updated_face['updated_at']
     )

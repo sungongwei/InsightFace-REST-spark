@@ -84,6 +84,7 @@ class FaceManager:
                     'id': face_id,
                     'name': name,
                     'embedding': embedding.tolist() if embedding is not None else None,
+                    'image_data': face_crop,
                     'gender': gender,
                     'age': age,
                     'similarity': 1.0  # New face, perfect match with itself
@@ -99,6 +100,7 @@ class FaceManager:
                 'id': face['id'],
                 'name': face['name'],
                 'embedding': face['embedding'].tolist(),
+                'image_data': face['image_data'],
                 'gender': face['gender'],
                 'age': face['age'],
                 'created_at': face['created_at'],
@@ -114,6 +116,7 @@ class FaceManager:
                 'id': face['id'],
                 'name': face['name'],
                 'embedding': face['embedding'].tolist(),
+                'image_data': face['image_data'],
                 'gender': face['gender'],
                 'age': face['age'],
                 'created_at': face['created_at'],
@@ -130,6 +133,7 @@ class FaceManager:
                 'id': face['id'],
                 'name': face['name'],
                 'embedding': face['embedding'].tolist(),
+                'image_data': face['image_data'],
                 'gender': face['gender'],
                 'age': face['age'],
                 'created_at': face['created_at'],
@@ -177,28 +181,28 @@ class FaceManager:
         # Delete from database
         return self.db.delete_faces_by_name(name)
     
-    def search_similar_faces(self, query_embedding: np.ndarray, k: int = 5, 
+    def search_similar_faces(self, query_embedding: np.ndarray, k: int = 5,
                            threshold: float = 0.5) -> List[Dict[str, Any]]:
         """
         Search for similar faces to the query embedding.
-        
+
         Args:
             query_embedding: The embedding to search for
             k: Number of top results to return
             threshold: Minimum similarity threshold
-        
+
         Returns:
             List of dictionaries with face information and similarity scores
         """
         results = self.search_engine.search(query_embedding, k, threshold)
-        
+
         similar_faces = []
         for face_id, similarity in results:
             face = self.get_face_by_id(face_id)
             if face:
                 face['similarity'] = similarity
                 similar_faces.append(face)
-        
+
         return similar_faces
     
     async def search_faces_by_image(self, image_data: bytes, k: int = 5,

@@ -1,3 +1,4 @@
+import base64
 from typing import List, Optional
 from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Depends
 from pydantic import BaseModel
@@ -14,6 +15,7 @@ class SearchResponse(BaseModel):
     name: str
     gender: Optional[int] = None
     age: Optional[int] = None
+    image_data: Optional[str] = None  # Base64 encoded image data
     similarity: float
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
@@ -45,13 +47,14 @@ async def search_similar_faces(
         k=k,
         threshold=threshold
     )
-    
+
     return [
         SearchResponse(
             id=face['id'],
             name=face['name'],
             gender=face['gender'],
             age=face['age'],
+            image_data=base64.b64encode(face['image_data']).decode('utf-8') if face['image_data'] else None,
             similarity=face['similarity'],
             created_at=face['created_at'],
             updated_at=face['updated_at']
@@ -89,13 +92,14 @@ async def search_by_embedding(
         k=k,
         threshold=threshold
     )
-    
+
     return [
         SearchResponse(
             id=face['id'],
             name=face['name'],
             gender=face['gender'],
             age=face['age'],
+            image_data=base64.b64encode(face['image_data']).decode('utf-8') if face['image_data'] else None,
             similarity=face['similarity'],
             created_at=face['created_at'],
             updated_at=face['updated_at']
