@@ -241,7 +241,7 @@
                 showStatus('Searching for similar faces...');
 
                 const baseUrl = getApiBaseUrl();
-                const response = await fetch(`${baseUrl}/search`, {
+                const response = await fetch(`${baseUrl}/v1/search`, {
                     method: 'POST',
                     body: formData
                 });
