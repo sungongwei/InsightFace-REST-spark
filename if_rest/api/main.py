@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 import aiohttp
 from aiohttp import ClientTimeout, TCPConnector
 from fastapi import FastAPI
+from starlette.formparsers import MultiPartParser
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_offline import FastAPIOffline
 from fastapi.staticfiles import StaticFiles
@@ -93,6 +94,8 @@ from fastapi import Request
 
 
 def get_app() -> FastAPI:
+    # 放在创建 application 之前
+    MultiPartParser.max_part_size = 100 * 1024 * 1024  # 100MB
     application = FastAPIOffline(
         title="InsightFace-REST",
         description="Face recognition REST API",
@@ -107,6 +110,7 @@ def get_app() -> FastAPI:
         allow_methods=['*'],
         allow_headers=['*']
     )
+    application
     application.include_router(v1_router, prefix="/v1")
 
     # Serve static files
