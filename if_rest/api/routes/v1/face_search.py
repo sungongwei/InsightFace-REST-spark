@@ -23,27 +23,37 @@ class SearchResponse(BaseModel):
 
 @router.post('/search', tags=['Face Search'])
 async def search_similar_faces(
-    file: UploadFile = File(...),
+    file: UploadFile = File(None),
+    image_data: str = Form(None),  # Base64 encoded image data
     k: int = Form(5),
     threshold: float = Form(0.5),
     face_manager = Depends(get_face_manager)
 ) -> List[SearchResponse]:
     """
-    Search for similar faces in the database using an uploaded image.
+    Search for similar faces in the database using an uploaded image or base64 encoded image data.
 
-    - **file**: Query image containing the face to search for
+    - **file**: Query image containing the face to search for (alternative to image_data)
+    - **image_data**: Base64 encoded image data (alternative to file)
     - **k**: Number of top results to return (default: 5)
     - **threshold**: Minimum similarity threshold (default: 0.5)
     """
-    if not file:
-        raise HTTPException(status_code=400, detail="Image file is required")
+    if not file and not image_data:
+        raise HTTPException(status_code=400, detail="Either image file or base64 image data is required")
 
-    # Read image data
-    image_data = await file.read()
+    # Handle image data from either file upload or base64 string
+    if file:
+        # Read image data from uploaded file
+        image_bytes = await file.read()
+    elif image_data:
+        # Decode base64 image data
+        try:
+            image_bytes = base64.b64decode(image_data)
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid base64 image data")
 
     # Search for similar faces
     results = await face_manager.search_faces_by_image(
-        image_data=image_data,
+        image_data=image_bytes,
         k=k,
         threshold=threshold
     )
